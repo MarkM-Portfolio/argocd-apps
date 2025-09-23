@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: api-kumuapi
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/kumumedia/kumu-k8s-helmchart.git'
+    path: api-kumuapi
+    targetRevision: HEAD
+    helm:
+      valueFiles:
+        - values/stage.yaml
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: kumuapi
+  syncPolicy:
+    automated: { }

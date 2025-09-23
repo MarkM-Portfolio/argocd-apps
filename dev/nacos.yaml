@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kumu-media-dev-nacos
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/kumumedia/kumu-k8s-helmchart.git'
+    path: nacos
+    targetRevision: HEAD
+    helm:
+      valueFiles:
+        - values/development.yaml
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: nacos
+  syncPolicy:
+    automated: {}

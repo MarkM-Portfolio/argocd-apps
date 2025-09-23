@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://charts.jetstack.io'
+    targetRevision: v1.8.0
+    helm:
+      parameters:
+        - name: prometheus.enabled
+          value: 'false'
+        - name: installCRDs
+          value: 'true'
+        - name: serviceAccount.annotations.eks\.amazonaws\.com\/role-arn
+          value: 'arn:aws:iam::577224445833:role/certmanager-role'
+        - name: securityContext.enabled
+          value: 'true'
+        - name: securityContext.fsGroup
+          value: '1001'
+    chart: cert-manager
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: cert-manager
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - Replace=true

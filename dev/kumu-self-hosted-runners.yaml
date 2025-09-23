@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kumu-self-hosted-runners
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/chad-kumu/kumu-self-hosted-runner.git'
+    path: .
+    targetRevision: HEAD
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: actions
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

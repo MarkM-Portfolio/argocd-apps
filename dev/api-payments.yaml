@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: api-payments
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/kumumedia/kumu-k8s-helmchart.git'
+    path: api-payments
+    targetRevision: dev
+    helm:
+      valueFiles:
+        - values/dev.yaml
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: kumuapi
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+

@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kumu-media-prod-nacos
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/nacos-group/nacos-k8s.git'
+    path: helm
+    targetRevision: HEAD
+    helm:
+      parameters:
+        - name: 'ingress.hosts[0].host'
+          value: nacos-prod.kumuapi.com
+        - name: ingress.enabled
+          value: 'true'
+        - name: nacos.plugin.image.tag
+          value: '1.1'
+        - name: nacos.image.tag
+          value: v2.0.4-slim
+        - name: 'ingress.hosts[0].paths[0]'
+          value: /
+        - name: ingress.annotations.kubernetes\.io\/ingress\.class
+          value: nginx
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: nacos
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

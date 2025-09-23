@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kumu-runner-controller
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/actions-runner-controller/actions-runner-controller.git'
+    path: charts/actions-runner-controller
+    targetRevision: v0.22.0
+    helm:
+      parameters:
+        - name: syncPeriod
+          value: 1m
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: actions
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+
